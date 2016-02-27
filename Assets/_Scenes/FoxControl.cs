@@ -3,9 +3,10 @@ using System.Collections;
 
 public class FoxControl : MonoBehaviour
 {
+    const int RIGHT = 1;
+    const int LEFT = -1;
     private Rigidbody2D _Rigidbody2D;
-
-    public Rigidbody2D laser;
+    public Bullet laser;
 
     public KeyCode jump;
     public KeyCode moveLeft;
@@ -22,6 +23,8 @@ public class FoxControl : MonoBehaviour
     const float k_GroundedRadius = .5f;
     private Transform m_CeilingCheck;   // A position marking where to check for ceilings
     const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
+
+    int facing;
     // Use this for initialization
     void Start ()
     {
@@ -30,6 +33,7 @@ public class FoxControl : MonoBehaviour
         m_CeilingCheck = transform.Find("CeilingCheck");
         automatic = false;
         autoTimeElapsed = 0f;
+        facing = RIGHT;
 
     }
     // Update is called once per frame
@@ -44,7 +48,7 @@ public class FoxControl : MonoBehaviour
         }
 
 
-
+        //movement
         if (Input.GetKey(jump) && m_Grounded)
         {
             _Rigidbody2D.AddForce(new Vector2(0, jumpForce));
@@ -52,33 +56,50 @@ public class FoxControl : MonoBehaviour
         }
         else if (Input.GetKey(moveLeft))
         {
+            if (!Input.GetKey(moveRight))
+                facing = LEFT;
             _Rigidbody2D.velocity = new Vector2(speed * -1, _Rigidbody2D.velocity.y);
         }
         else if (Input.GetKey(moveRight))
         {
+            if (!Input.GetKey(moveLeft))
+                facing = RIGHT;
             _Rigidbody2D.velocity = new Vector2(speed, _Rigidbody2D.velocity.y);
         }
+        //stop moving
+        if (Input.GetKeyUp(moveLeft))
+        {
+            _Rigidbody2D.velocity = new Vector2(0, _Rigidbody2D.velocity.y);
+        }
+        if (Input.GetKeyUp(moveRight))
+        {
+            _Rigidbody2D.velocity = new Vector2(0, _Rigidbody2D.velocity.y);
+        }
 
-        if(Input.GetKeyDown(selectFire))
+        //select fire
+        if (Input.GetKeyDown(selectFire))
         {
             automatic = !automatic;
         }
-
+        
+        //automatic laser
         if (automatic && Input.GetKey(shoot))
         {
             autoTimeElapsed += Time.deltaTime;
             if (autoTimeElapsed >= 0.09f)
             {
                 autoTimeElapsed = 0f;
-                Rigidbody2D _laser = Instantiate(laser, transform.position, transform.rotation) as Rigidbody2D;
-                _laser.velocity = new Vector2(80f, 0);
+                Bullet _laser = Instantiate(laser, transform.position, transform.rotation) as Bullet;
+                _laser.bulletVelocity = facing * 80f;
+                _laser.shooter = "Player";
             }
         }
         if (Input.GetKeyDown(shoot) && !automatic)
         {
-            Rigidbody2D _laser = Instantiate(laser, transform.position, transform.rotation) as Rigidbody2D;
-            _laser.velocity = new Vector2(80f, 0);
-            
+            Bullet _laser = Instantiate(laser, new Vector3(transform.position.x + facing *(transform.lossyScale.x * 4f), transform.position.y, transform.position.y), transform.rotation) as Bullet;
+            _laser.bulletVelocity = facing * 80f;
+            _laser.shooter = "Player";
         }
+
     }
 }
