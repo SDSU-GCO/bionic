@@ -29,6 +29,11 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag != shooter)
         {
+           if (collision.gameObject.tag == "Destroyable")
+           {
+                Health _ObjectHealth = collision.gameObject.GetComponent<Health>();
+                _ObjectHealth.Decrement(1);
+           }
             Destroy(gameObject);
         }
         

@@ -18,10 +18,10 @@ public class FoxControl : MonoBehaviour
     bool automatic;
     float autoTimeElapsed;
     [SerializeField] private LayerMask m_WhatIsGround;
-    private Transform m_GroundCheck;
-    private bool m_Grounded;
+    private Transform _GroundCheck;
+    private bool _Grounded;
     const float k_GroundedRadius = .5f;
-    private Transform m_CeilingCheck;   // A position marking where to check for ceilings
+    private Transform _CeilingCheck;   // A position marking where to check for ceilings
     const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
 
     int facing;
@@ -29,8 +29,8 @@ public class FoxControl : MonoBehaviour
     void Start ()
     {
         _Rigidbody2D = GetComponent<Rigidbody2D>();
-        m_GroundCheck = transform.Find("GroundCheck");
-        m_CeilingCheck = transform.Find("CeilingCheck");
+        _GroundCheck = transform.Find("GroundCheck");
+        _CeilingCheck = transform.Find("CeilingCheck");
         automatic = false;
         autoTimeElapsed = 0f;
         facing = RIGHT;
@@ -40,19 +40,19 @@ public class FoxControl : MonoBehaviour
     void Update ()
     {
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].gameObject != gameObject)
-                m_Grounded = true;
+                _Grounded = true;
         }
 
 
         //movement
-        if (Input.GetKey(jump) && m_Grounded)
+        if (Input.GetKey(jump) && _Grounded)
         {
             _Rigidbody2D.AddForce(new Vector2(0, jumpForce));
-            m_Grounded = false;
+            _Grounded = false;
         }
         else if (Input.GetKey(moveLeft))
         {
@@ -89,7 +89,7 @@ public class FoxControl : MonoBehaviour
             if (autoTimeElapsed >= 0.09f)
             {
                 autoTimeElapsed = 0f;
-                Bullet _laser = Instantiate(laser, transform.position, transform.rotation) as Bullet;
+                Bullet _laser = Instantiate(laser, new Vector3(transform.position.x + facing * (transform.lossyScale.x * 4f), transform.position.y, transform.position.y), transform.rotation) as Bullet;
                 _laser.bulletVelocity = facing * 80f;
                 _laser.shooter = "Player";
             }

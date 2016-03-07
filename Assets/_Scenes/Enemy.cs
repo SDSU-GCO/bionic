@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour {
 
 	// fox detection
 		// calculate distance between fox and enemy
-		float distanceToFox = Distance(Vector2 a, Vector2 b);
+	//	float distanceToFox = Distance(Vector2 a, Vector2 b);
 		// if in range of the fox and burst-fire rof timer is zero
 			// call fire at fox
 			// set burst-fire rof timer to two
