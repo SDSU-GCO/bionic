@@ -4,13 +4,15 @@ using System.Collections;
 public class Enemy : MonoBehaviour {
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+	{
+		
 	}
 	
 	// Update is called once per frame
 	// to update timers
-	void Update () {
+	void Update () 
+	{
 		// call fox detection
 	}
 

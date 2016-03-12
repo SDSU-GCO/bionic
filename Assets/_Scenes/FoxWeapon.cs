@@ -44,11 +44,9 @@ public class FoxWeapon : MonoBehaviour
 		{
 			selected = weaponType.AUTO;
 		}
-
-
 		// Fire
 		// automatic laser
-		if (Input.GetKey(shoot) && selected == weaponType.AUTO && _battery.batteries > 0)
+		if (Input.GetKey(shoot) && selected == weaponType.AUTO && _battery.BatteryLife() > 0)
 		{
 			autoTimeElapsed += Time.deltaTime;
 			if (autoTimeElapsed >= 0.09f)
