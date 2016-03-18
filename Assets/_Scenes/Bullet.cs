@@ -12,7 +12,6 @@ public class Bullet : MonoBehaviour
     {
         _Rigidbody2D = GetComponent<Rigidbody2D>();
         _Rigidbody2D.velocity = new Vector2(bulletVelocity, 0);
-		gameObject.tag = shooter;
     }
 	
 	// Update is called once per frame
@@ -32,10 +31,11 @@ public class Bullet : MonoBehaviour
         {
 			if (collision.gameObject.tag == "Destroyable" || (shooter == "Player" && collision.gameObject.tag == "Enemy") || (shooter == "Enemy" && collision.gameObject.tag == "Player"))
            {
-                Health _ObjectHealth = collision.gameObject.GetComponent<Health>();
+				Health _ObjectHealth = collision.gameObject.GetComponent<Health>();
                 _ObjectHealth.Decrement(1);
            }
-            Destroy(gameObject);
+			if (collision.gameObject.tag != "Weapon")
+				Destroy(gameObject);
         }
         
     }
